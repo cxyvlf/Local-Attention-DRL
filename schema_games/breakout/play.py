@@ -59,40 +59,41 @@ def play_game(environment_class,
     play(env, fps=fps, keys_to_action=keys_to_action, zoom=ZOOM_FACTOR)
 
 
-if __name__ == '__main__':
-    """
-    Command line interface.
-    """
-    parser = argparse.ArgumentParser(
-        description='Play interactively one of breakout game variants.',
-        usage='play.py [<Game>] [--debug]')
+# if __name__ == '__main__':
+#     """
+#     Command line interface.
+#     """
+#     parser = argparse.ArgumentParser(
+#         description='Play interactively one of breakout game variants.',
+#         usage='play.py [<Game>] [--debug]')
 
-    parser.add_argument(
-        'game',
-        default='StandardBreakout',
-        type=str,
-        help="Game variant specified as class name."
-    )
+#     parser.add_argument(
+#         'game',
+#         default='StandardBreakout',
+#         type=str,
+#         help="Game variant specified as class name."
+#     )
 
-    parser.add_argument(
-        '--debug',
-        dest='debug',
-        default=DEFAULT_DEBUG,
-        action='store_true',
-        help="Print debugging messages and perform additional sanity checks."
-    )
+#     parser.add_argument(
+#         '--debug',
+#         dest='debug',
+#         default=DEFAULT_DEBUG,
+#         action='store_true',
+#         help="Print debugging messages and perform additional sanity checks."
+#     )
 
-    parser.add_argument(
-        '--cheat_mode',
-        dest='cheat_mode',
-        default=DEFAULT_CHEAT_MODE,
-        action='store_true',
-        help="Cheat mode: infinite lives."
-    )
+#     parser.add_argument(
+#         '--cheat_mode',
+#         dest='cheat_mode',
+#         default=DEFAULT_CHEAT_MODE,
+#         action='store_true',
+#         help="Cheat mode: infinite lives."
+#     )
 
-    options = parser.parse_args()
-    variant = options.game
-    debug = options.debug
-    cheat_mode = options.cheat_mode
+    # options = parser.parse_args()
+    # variant = options.game
+    # debug = options.debug
+    # cheat_mode = options.cheat_mode
 
-    play_game(getattr(games, variant), debug=debug, cheat_mode=cheat_mode)
+    # play_game(getattr(games, variant), debug=debug, cheat_mode=cheat_mode)
+play_game(games.StandardBreakout)

@@ -1,5 +1,5 @@
 import numpy as np
-import matplotlib as mpl
+import matplotlib.cm as mpl
 
 
 ###############################################################################
@@ -65,7 +65,7 @@ def get_distinct_colors(n):
     """
     Get a palette of n distinct colors to use for the bricks
     """
-    cmap = mpl.cm.Set3
+    cmap = mpl.Set3
     bins = np.linspace(0, 1, 9)[:n]
     pal = list(map(tuple, cmap(bins)[:, :3]))
     pal = [(round(255*r), round(255*g), round(255*b)) for (r, g, b) in pal]

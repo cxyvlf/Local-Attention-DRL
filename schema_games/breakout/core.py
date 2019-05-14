@@ -255,8 +255,8 @@ class BreakoutEngine(gym.Env):
     ###########################################################################
 
     def _render(self, mode='human', close=False):
-        if self.reset_has_never_been_called:
-            raise ResetHasNeverBeenCalledError
+        # if self.reset_has_never_been_called:
+        #     raise ResetHasNeverBeenCalledError
 
         if mode == 'rgb_array':
             return self._get_image()
