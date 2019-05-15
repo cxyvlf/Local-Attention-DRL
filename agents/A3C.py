@@ -21,11 +21,10 @@ class AC_Nets(object):
     
 
 
-    class Worker(object):
-        def __init__(self):
-            pass
+class Worker(object):
+    def __init__(self):
+        pass
 
-        def work(self):
-            pass
+    def work(self):
+        pass
 
-            
