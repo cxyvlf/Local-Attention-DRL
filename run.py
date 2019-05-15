@@ -3,7 +3,7 @@ from schema_games.breakout import games
 from schema_games.printing import blue
 
 env_args = {
-    'return_state_as_image': True,
+    'return_state_as_image': False,
 }
 
 env = games.StandardBreakout(**env_args)
@@ -22,11 +22,8 @@ for i_episode in range(3000):
         env.render()
         action = np.random.randint(0, n_actions)
         observation, reward, done, info = env.step(action)
+        
+
         if done:
             break
-
-
-
-
-
 
