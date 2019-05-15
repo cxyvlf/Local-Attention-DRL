@@ -3,13 +3,13 @@ from schema_games.breakout import games
 from schema_games.printing import blue
 
 env_args = {
-    'return_state_as_image': False,
+    'return_state_as_image': True,
 }
 
 env = games.StandardBreakout(**env_args)
 n_actions = env.action_space.n
 
-print env.observation_space
+print env.observation_space.shape
 print env.action_space
 print n_actions
 
