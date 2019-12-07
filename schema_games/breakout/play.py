@@ -37,10 +37,10 @@ def play_game(environment_class,
     fps : int
         Frame rate per second at which to display the game.
     """
-    print blue("-" * 80)
-    print blue("Starting interactive game. "
-               "Press <ESC> at any moment to terminate.")
-    print blue("-" * 80)
+    print(blue("-" * 80))
+    print(blue("Starting interactive game. "
+                "Press <ESC> at any moment to terminate."))
+    print(blue("-" * 80))
 
     env_args = {
         'return_state_as_image': True,
@@ -97,3 +97,14 @@ def play_game(environment_class,
 
     # play_game(getattr(games, variant), debug=debug, cheat_mode=cheat_mode)
 play_game(games.StandardBreakout)
+
+# env_args = {
+# 'return_state_as_image': True,
+# 'debugging': DEFAULT_DEBUG,
+# }
+
+
+# env = games.StandardBreakout(**env_args)
+
+# print env.action_space.__class__.__name__
+# print env.observation_space.shape

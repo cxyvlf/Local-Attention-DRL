@@ -28,11 +28,11 @@ def shape_to_nzis(shape):
     """
     Convert a shape tuple (int, int) to NZIs.
     """
-    return np.array(zip(*np.ones(shape).nonzero()))
+    return np.array(list(zip(*np.ones(shape).nonzero())))
 
 
 def compute_shape_from_nzis(nzis):
-    return (max(zip(*nzis)[0]) + 1, max(zip(*nzis)[1]) + 1)
+    return (max(list(zip(*nzis))[0]) + 1, max(list(zip(*nzis))[1]) + 1)
 
 
 def compute_edge_nzis(nzis):
@@ -54,7 +54,7 @@ def compute_edge_nzis(nzis):
 
 
 def offset_nzis_from_position(nzis, pos):
-    return zip(*(nzis + np.array(pos)).T)
+    return list(zip(*(nzis + np.array(pos)).T))
 
 
 ###############################################################################

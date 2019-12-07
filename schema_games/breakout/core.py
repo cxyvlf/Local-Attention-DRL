@@ -7,6 +7,11 @@ from itertools import product
 import gym
 from gym.envs.classic_control import rendering
 
+import sys
+from os import path
+
+sys.path.append( path.dirname( path.dirname( path.dirname( path.abspath(__file__) ) ) ) )
+
 from schema_games.printing import red, blue, yellow, green, cyan, purple
 from schema_games.utils import blockedrange, offset_nzis_from_position
 from schema_games.breakout.objects import \
@@ -254,7 +259,7 @@ class BreakoutEngine(gym.Env):
     # API methods: Gym API methods + our `layout` method
     ###########################################################################
 
-    def _render(self, mode='human', close=False):
+    def render(self, mode='human', close=False):
         # if self.reset_has_never_been_called:
         #     raise ResetHasNeverBeenCalledError
 
@@ -267,7 +272,7 @@ class BreakoutEngine(gym.Env):
 
             self.viewer.imshow(self._get_image())
 
-    def _reset(self):
+    def reset(self):
         """
         Resets the bricks and ball to start a new game.
 
@@ -279,7 +284,8 @@ class BreakoutEngine(gym.Env):
             Contains useful information about the environment for debugging
             purposes only.
         """
-        for attribute, initial_value in self.reset_mutables.iteritems():
+        #for attribute, initial_value in self.reset_mutables.iteritems():
+        for attribute, initial_value in self.reset_mutables.items():
             setattr(self, attribute, initial_value)
 
         # Set up game objects (balls and paddle: position/velocity do not
@@ -293,7 +299,8 @@ class BreakoutEngine(gym.Env):
         self.miscellaneous = []
         self.bricks = []
         self.lost_balls = []
-        self.balls = [Ball(position=(bx, by)) for _ in xrange(self.num_balls)]
+        #self.balls = [Ball(position=(bx, by)) for _ in xrange(self.num_balls)]
+        self.balls = [Ball(position=(bx, by)) for _ in range(self.num_balls)]
         self.paddle = Paddle((px, py), shape=self.initial_paddle_shape)
 
         self.layout()
@@ -306,8 +313,8 @@ class BreakoutEngine(gym.Env):
         self.standard_color_map = {c: i for i, c in enumerate(unique_colors)}
 
         if self.debugging:
-            print blue("Detected the following unique "
-                       "colors: {}".format(self.standard_color_map))
+            print(blue("Detected the following unique "
+                       "colors: {}".format(self.standard_color_map)))
 
         # Counter variables updated at each timestep
         self.current_episode_frame = -1
@@ -324,7 +331,7 @@ class BreakoutEngine(gym.Env):
 
         return state
 
-    def _step(self, action):
+    def step(self, action):
         """
         Parameters
         ----------
@@ -514,7 +521,7 @@ class BreakoutEngine(gym.Env):
             return self._memoized_index_to_velocity[self.ball_movement_radius]
         except KeyError:
             unit_square = []
-            coordinates = xrange(-self.ball_movement_radius,
+            coordinates = range(-self.ball_movement_radius,
                                  self.ball_movement_radius + 1)
 
             for dx, dy in product(coordinates, coordinates):
@@ -543,7 +550,7 @@ class BreakoutEngine(gym.Env):
         """
         velocity_to_index = {}
 
-        for k, v in self.index_to_velocity.iteritems():
+        for k, v in self.index_to_velocity.items():
             velocity_to_index[v] = k
 
         return velocity_to_index
@@ -976,7 +983,7 @@ class BreakoutEngine(gym.Env):
         if self.all_good_bricks_destroyed():
             self.reward += self.reward_upon_no_bricks_left
             self.done = True
-            print green("Game over! You won.")
+            print(green("Game over! You won."))
 
         # Catch lost balls
         for ball in self.balls:
@@ -994,11 +1001,11 @@ class BreakoutEngine(gym.Env):
 
             if self.num_lives > 0:
                 self.done = False
-                print red("[---] Lives remaining:"), self.num_lives
+                print(red("[---] Lives remaining:"), self.num_lives)
             else:
                 self.done = True
-                print red("[---] Game over! You lost.")
-                print red("*" * 80)
+                print(red("[---] Game over! You lost."))
+                print(red("*" * 80))
 
         if self.done is None:
             self.done = False
@@ -1090,7 +1097,7 @@ class BreakoutEngine(gym.Env):
             return old_index
         else:
             while True:
-                new_index = random.choice(self.index_to_velocity.keys())
+                new_index = random.choice(list(self.index_to_velocity.keys()))
 
                 # If True, make sure that new velocity stays in same quadrant
                 if not self.allow_bounce_against_physics:
@@ -1252,11 +1259,11 @@ class BreakoutEngine(gym.Env):
             Updated positions for each ball.
         """
         downward_velocities = {k: v
-                               for k, v in self.index_to_velocity.iteritems()
+                               for k, v in self.index_to_velocity.items()
                                if v[1] < 0}
 
         for ball in self.balls:
-            ball.velocity_index = random.choice(downward_velocities.keys())
+            ball.velocity_index = random.choice(list(downward_velocities.keys()))
 
         brick_ordinates = [self.height-1-self.wall_thickness]
         brick_ordinates += [brick.position[1] + brick.nzis_min[1]
@@ -1279,10 +1286,10 @@ class BreakoutEngine(gym.Env):
 
                 if tuple(ball.position) not in occupied_positions:
                     if self.debugging:
-                        print \
+                        print( \
                             purple("Ball-paddle separation at collision:"), \
                             yellow("%i pixels" % (ball.position[1] % 2)), \
-                            purple("vertically when |v[y]| = %i" % _MAX_SPEED)
+                            purple("vertically when |v[y]| = %i" % _MAX_SPEED))
                     break
 
     ###########################################################################
@@ -1305,7 +1312,7 @@ class BreakoutEngine(gym.Env):
                 string += cyan("{}, {}".format(*velocity_))
                 string += blue("),")
 
-            print string
+            print(string)
 
     def debugprint_line(self, event_type, *args):
         """
@@ -1315,22 +1322,22 @@ class BreakoutEngine(gym.Env):
 
         if self.debugging:
             if event_type == 'collision':
-                print " " * N_SPACES, yellow("<!>")
+                print(" " * N_SPACES, yellow("<!>"))
             elif event_type == 'destruction':
-                print " " * N_SPACES, red("<!>")
+                print(" " * N_SPACES, red("<!>"))
             elif event_type == 'conditional event':
                 event_name = type(args[0]).__name__
-                print " " * N_SPACES, red("<E> : {}".format(event_name))
+                print(" " * N_SPACES, red("<E> : {}".format(event_name)))
             elif event_type == 'reward':
-                print " " * N_SPACES, green("-> REWARD:"), purple(self.reward)
+                print(" " * N_SPACES, green("-> REWARD:"), purple(self.reward))
             elif event_type == 'ball physics':
-                print " " * N_SPACES, \
+                print(" " * N_SPACES, \
                     green("-> {}".format(args[0])), \
-                    yellow("vx<PRF>: {}".format(args[1]))
+                    yellow("vx<PRF>: {}".format(args[1])))
             elif event_type == 'higher-order collision':
-                print " " * N_SPACES, cyan("<>")
+                print(" " * N_SPACES, cyan("<>"))
             elif event_type == 'ball inside paddle':
-                print " " * N_SPACES, purple("<>")
+                print(" " * N_SPACES, purple("<>"))
 
     def all_good_bricks_destroyed(self):
         """
