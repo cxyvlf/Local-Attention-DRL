@@ -96,7 +96,7 @@ def play_game(environment_class,
     # cheat_mode = options.cheat_mode
 
     # play_game(getattr(games, variant), debug=debug, cheat_mode=cheat_mode)
-play_game(games.StandardBreakout)
+play_game(games.MovingObstaclesBreakout)
 
 # env_args = {
 # 'return_state_as_image': True,

@@ -340,7 +340,7 @@ class RandomTargetBreakout(StandardBreakout):
         block_of_bricks = []
         color_index = self.brick_ys.index(block_y)
 
-        for i, j in product(xrange(m), xrange(n)):
+        for i, j in product(range(m), range(n)):
             color = CLASSIC_BRICK_COLORS[color_index + j]
             position = (block_x + i * self._brick_shape[0],
                         block_y + j * self._brick_shape[1])
