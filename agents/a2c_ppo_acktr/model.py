@@ -13,7 +13,20 @@ class Flatten(nn.Module):
 
 class Policy(nn.Module):
     def __init__(self, obs_shape, action_space, base=None, base_kwargs=None):
-        pass
+        super(Policy, self).__init__()
+        if base_kwargs is None:
+            base_kwargs = {}
+        if base in None:
+            if len(obs_shape) == 3:
+                base = CNNBase
+            elif len(obs_shape) == 1:
+                base = MLPBase
+            else:
+                raise NotImplementedError
+
+        self.base = base(obs_shape[0], **base_kwargs)
+
+        if 
 
     @property
     def is_recurrent(self):
@@ -54,6 +67,14 @@ class NNBase(nn.Module):
         pass
 
 class CNNBase(NNBase):
+    def __init__(self, num_inputs, recurrent=False, hidden_size=512):
+        pass
+
+    def forward(self, inputs, rnn_hxs, masks):
+        pass
+
+
+class MLPBase(NNBase):
     def __init__(self, num_inputs, recurrent=False, hidden_size=512):
         pass
 

@@ -12,12 +12,34 @@ from baselines.common.vec_env.dummy_vec_env import DummyVecEnv
 from baselines.common.vec_env.shmem_vec_env import ShmemVecEnv
 from baselines.common.vec_env.vec_normalize import VecNormalize as VecNormalize_
 
+import sys
+from os import path
+sys.path.append( path.dirname( path.dirname( path.dirname( path.abspath(__file__) ) ) ) )
+from schema_games.breakout.games import StandardBreakout, OffsetPaddleBreakout, \
+                    HalfNegativeBreakout, MiddleWallBreakout, JugglingBreakout, \
+                    RandomTargetBreakout, MiddleWallBreakout
+
 def make_env(env_id, seed, rank, log_dir, allow_early_resets):
     def _thunk():
         env_args = {
             'return_state_as_image': True,
         }
-        env = env_id(**env_args)
+
+        # For Breakout
+        if env_id in globals():
+            env = globals()[env_id](**env_args) 
+        else:
+            # For other games
+            if env_id.startswith("dm"):
+                _, domain, task = env_id.split('.')
+                env = dm_control2gym.make(domain_name=domain, task_name=task)
+            else:
+                env = gym.make(env_id)
+
+        is_atari = hasattr(gym.envs, 'atari') and isinstance(
+            env.unwrapped, gym.envs.atari.atari_env.AtariEnv)
+        if is_atari:
+            env = make_atari(env_id)
         
         env.seed(seed + rank)
 
@@ -32,7 +54,7 @@ def make_env(env_id, seed, rank, log_dir, allow_early_resets):
                 os.path.join(log_dir, str(rank)),
                 allow_early_resets=allow_early_resets)
 
-        env = wrap_deepmind(env)   
+        # env = wrap_deepmind(env)   
 
         obs_shape = env.observation_space.shape
 
@@ -59,7 +81,7 @@ def make_vec_envs(env_name,
         make_env(env_name, seed, i, log_dir, allow_early_resets)
         for i in range(num_processes)
     ]
-
+    
     if len(envs) > 1:
         envs = ShmemVecEnv(envs, context='fork')
     else:
