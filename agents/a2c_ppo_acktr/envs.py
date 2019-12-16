@@ -226,8 +226,9 @@ class VecPyTorchFrameStack(VecEnvWrapper):
 
     def step_wait(self):
         obs, rews, news, infos = self.venv.step_wait()
+        stacked_obs = self.stacked_obs.clone()
         self.stacked_obs[:, :-self.shape_dim0] = \
-            self.stacked_obs[:, self.shape_dim0:]
+            stacked_obs[:, self.shape_dim0:]
         for (i, new) in enumerate(news):
             if new:
                 self.stacked_obs[i] = 0
@@ -245,3 +246,16 @@ class VecPyTorchFrameStack(VecEnvWrapper):
 
     def close(self):
         self.venv.close()
+
+device = torch.device("cuda:0")
+envs = make_vec_envs("StandardBreakout", 1, 1,
+                         0.99, '/tmp/gym/', device, False)
+
+print(envs.observation_space.shape)
+print(envs.action_space)
+actions = torch.zeros(1,1).to(int)
+envs.reset()
+for i in range(100):
+    print("Step: ", i)
+    envs.step(actions)
+
