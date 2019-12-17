@@ -247,15 +247,20 @@ class VecPyTorchFrameStack(VecEnvWrapper):
     def close(self):
         self.venv.close()
 
-device = torch.device("cuda:0")
-envs = make_vec_envs("StandardBreakout", 1, 1,
-                         0.99, '/tmp/gym/', device, False)
 
-print(envs.observation_space.shape)
-print(envs.action_space)
-actions = torch.zeros(1,1).to(int)
-envs.reset()
-for i in range(100):
-    print("Step: ", i)
-    envs.step(actions)
+if __name__ == "__main__":
+    device = torch.device("cuda:0")
+    envs = make_vec_envs("StandardBreakout", 1, 8,
+                            0.99, None, device, False)
 
+    print(envs.observation_space.shape)
+    print(envs.action_space)
+    actions = torch.zeros(8,1).to(int)
+    envs.reset()
+    for i in range(100000):
+        print("Step: ", i)
+        obs, reward, done, infos = envs.step(actions)
+        # print("obs: ", obs)
+        # print("reward: ", reward)
+        # print("done: ", done)
+        # print("infos: ", infos)

@@ -442,7 +442,7 @@ class BreakoutEngine(gym.Env):
         assert self.done is not None
 
         debug_info = {
-            'entity_states':  self.get_entity_states(),
+            'remain_lives':  self.num_lives,
         }
 
         if self.return_state_as_image:
@@ -1001,11 +1001,11 @@ class BreakoutEngine(gym.Env):
 
             if self.num_lives > 0:
                 self.done = False
-                print(red("[---] Lives remaining:"), self.num_lives)
+                # print(red("[---] Lives remaining:"), self.num_lives)
             else:
                 self.done = True
-                print(red("[---] Game over! You lost."))
-                print(red("*" * 80))
+                # print(red("[---] Game over! You lost."))
+                # print(red("*" * 80))
 
         if self.done is None:
             self.done = False
